@@ -1,0 +1,11 @@
+METHOD,TARGET,METRIC,VALUE,NOTE
+Correlation,Ks vs ATR_HIGH,correlation,0.21,weak
+Correlation,Kt vs ATR_LOW,correlation,0.10,weak
+Linear regression,Ks,R2,0.051,~5% of variance
+Linear regression,Kt,R2,0.007,negligible
+Polynomial (deg 2),SL/TP params -> profit,R2,0.0025,negligible
+Random Forest,Ks,R2,0.21,weak
+Random Forest,Kt,R2,-0.005,none
+Random Forest,profit (market features),R2,0.237,~24% of variance
+Random Forest,profit (Ks/Kt included as inputs),R2,0.91,DATA LEAKAGE (profit is computed from Ks/Kt)
+Neural network,Ks/Kt,R2,negative,failed
