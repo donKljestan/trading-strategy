@@ -8,6 +8,9 @@ machine-learning experiments, through price-action (Smart Money Concepts), to a 
 The emphasis is on **process and intellectual honesty**, not on a "holy grail": several promising
 ideas were tested rigorously and abandoned when they failed to generalise.
 
+> This repository is a curated reconstruction of research conducted over several months; the Git
+> history records its publication and cleanup, not the original experiment dates.
+
 ## The research journey
 
 The [`research/`](research/) folder reconstructs the work chronologically, phase by phase. Each phase
