@@ -47,6 +47,9 @@ parameter-driven approach is fragile.
 | 110 | 67 075 | 0.40–0.99 → 4.78 | 0.80, 1.00 → 3.34 | 0.340 | 50.7 | 283 |
 | 115 | 65 688 | none → 0.00 | 1.30, 0.80 → 0.93 | 0.333 | 49.9 | 273 |
 
+*(Excerpt — the full set of 24 intervals is in
+[`../results/best_params_per_interval.csv`](../results/best_params_per_interval.csv).)*
+
 ## Reading of the result
 
 - **The best parameters jump around.** `Ks` ranges across its whole grid (0.8 → 1.6) and `Kt`
