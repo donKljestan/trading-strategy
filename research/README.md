@@ -75,3 +75,7 @@ comma separated (`open_time, close_time, open, high, low, close, volume, ...`).
 - **G** - pivot to **Order Blocks / Smart Money Concepts** (a separate price-action engine in
   [`order_blocks/`](order_blocks/): swing/FVG/CHoCH/BOS detection plus a Decision-Tree order-block
   classifier). See [`docs/phase_G.md`](docs/phase_G.md).
+- **H** - the **final strategy**: a multi-timeframe confluence **scoring system** (0-19 points,
+  enter on score >= 14), implemented in
+  [`../backtesting/calculateProfit.py`](../backtesting/calculateProfit.py). See
+  [`docs/phase_H.md`](docs/phase_H.md).
