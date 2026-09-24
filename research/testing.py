@@ -9,11 +9,10 @@ Strategy summary:
     functions controlled by two coefficients, Ks (stop-loss scaling) and Kt
     (take-profit scaling). See get_stop_loss_function / get_take_profit_function.
 
-main() runs the Phase B experiment: it tunes the risk coefficients (Ks, Kt) *separately inside
-each ATR band* (0.25-0.30, 0.30-0.40, 0.40-0.50, 0.50-0.99) and records the best profit per
-band to profit_per_atr_band.csv. Each band can be made to look profitable in isolation, yet the
-combined out-of-sample run is not the sum of those profits -- the overfitting trap documented in
-docs/phase_B.md.
+main() runs the Phase C step: with the ATR-based exponential risk sizing in place (the Stop Loss
+curve is fitted in curve_fitting.py), it sweeps the risk coefficients (Ks, Kt) across rolling
+windows and writes every configuration's outcome plus the market conditions to parameters.csv --
+the dataset analysed in the later phases (correlation / regression / SHAP).
 
 Input data: prices.txt, one 15-minute candle per line, comma separated:
     open_time, close_time, open, high, low, close, volume, ...
@@ -201,12 +200,12 @@ class Order(threading.Thread):
 
 
 def get_stop_loss_function(atr, k):
-    # Exponential stop-loss sizing from ATR (Phase C). k == Ks.
+    # Exponential stop-loss sizing from ATR; curve fitted in curve_fitting.py (Phase C). k == Ks.
     return 1400 * (np.exp(k * atr) - 1)
 
 
 def get_take_profit_function(k):
-    # Exponential take-profit multiplier applied to the stop loss (Phase C). k == Kt.
+    # Exponential take-profit multiplier over the stop loss; coefficient from the fit (Phase C). k == Kt.
     return np.exp(0.8459 * k) - 1
 
 
@@ -375,30 +374,31 @@ def main():
     SMA_BUY_THRESHOLD = 45
     VOLUME_FACTOR = 1.5
 
-    # Phase B: tune (Ks, Kt) -> Stop Loss / Take Profit separately inside each ATR band.
-    # Each band can be made to look profitable in isolation; see docs/phase_B.md for why the
-    # combined out-of-sample run does not simply add these profits up.
-    atr_bands = [(0.25, 0.30), (0.30, 0.40), (0.40, 0.50), (0.50, 0.99)]
-    num_days = 300
-    days_back = 300
-    with open("profit_per_atr_band.csv", "w") as file:
-        file.write("ATR_LOW,ATR_HIGH,BEST_KS,BEST_KT,BEST_PROFIT\n")
-        for low, high in atr_bands:
-            ATR_THRESHOLD = low
-            ATR_THRESHOLD1 = high
-            best_ks = best_kt = 0.0
-            best_profit = 0.0
+    # Phase C: with ATR-based exponential risk sizing in place (see curve_fitting.py), sweep
+    # (Ks, Kt) across rolling windows and record every configuration's outcome together with the
+    # market conditions. The resulting parameters.csv is the dataset analysed in the later phases.
+    num_days = 5
+    days_back = 20
+    with open("parameters.csv", "w") as file:
+        file.write("AVERAGE_PRICE,PRICE_FREQUENCY,PRICE_TREND,AVERAGE_VOLUME,VOLUME_FREQUENCY,"
+                   "VOLUME_TREND,AVERAGE_ATR,AVERAGE_RSI,AVERAGE_SMA,ATR_LOW,ATR_HIGH,KS,KT,PROFIT\n")
+        while days_back < 400:
+            print(days_back)
+            ATR_THRESHOLD = 0.25
+            ATR_THRESHOLD1 = 1
             ks = 0.8
             while ks < 1.65:
                 kt = 0.8
                 while kt < 1.65:
-                    cp = backtesting(num_days, 70, days_back, ks, kt)[0]
-                    if cp > best_profit:
-                        best_profit = cp
-                        best_ks, best_kt = ks, kt
+                    (cp, avg_price, avg_atr, avg_rsi, avg_sma, avg_volume,
+                     price_trend, volume_trend, price_frequency, volume_frequency) = backtesting(
+                        num_days, 70, days_back, ks, kt)
+                    file.write(f"{int(avg_price)},{price_frequency},{price_trend},{int(avg_volume)},"
+                               f"{volume_frequency},{volume_trend},{avg_atr:.4f},{avg_rsi:.4f},{avg_sma:.4f},"
+                               f"{ATR_THRESHOLD:.2f},{ATR_THRESHOLD1:.2f},{ks:.2f},{kt:.2f},{cp} \n")
                     kt += 0.1
                 ks += 0.1
-            file.write(f"{low:.2f},{high:.2f},{best_ks:.2f},{best_kt:.2f},{best_profit:.2f}\n")
+            days_back += 5
 
 
 if __name__ == "__main__":
