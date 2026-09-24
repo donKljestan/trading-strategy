@@ -42,8 +42,8 @@ A Break of Structure (BOS) versus a Change of Character (CHoCH) on the order-blo
   distance `window`).
 - `label_swings` tags each swing **HH / HL / LH / LL** relative to the previous swing of its type.
 - `detect_fvg` measures the Fair Value Gap for every candle as a **percentage of the candle body**:
-
-  $$\text{FVG}\% = \frac{\min(\text{gap sides})}{\text{body size}}\times 100$$
+  `FVG% = 100 * min(gap sides) / body size`, where *gap sides* are the two imbalances left between
+  the current candle body and the previous/next candle.
 
 - `detect_order_blocks_with_zone` opens an order block when `FVG% > 50` and keeps the zone active
   (`isOrderBlock = 1`) until price trades back into the block low or a **10-day** window elapses.
@@ -61,9 +61,9 @@ that only meaningful pivots survive:
 
 - `detect_strict_local_maxima` / `minima` - strict local extrema of the SMA.
 - `calculate_scaled_volatility_for_maxima` / `minima` - keep a pivot only if the exponentially
-  scaled move to the previous pivot exceeds `threshold` (default `0.13`):
-
-  $$v = 100\cdot\overline{\left(e^{\,|\Delta \text{SMA}|/\text{SMA}_{-1}} - 1\right)}$$
+  scaled move to the previous pivot exceeds `threshold` (default `0.13`). Over the SMA segment
+  between two pivots, each relative step `|dSMA| / SMA_prev` is exponentiated and averaged:
+  `v = 100 * mean(exp(|dSMA| / SMA_prev) - 1)`.
 
 - `label_swings_SMA` - HH/HL/LH/LL on the filtered pivots.
 - `found_triangle_maxima` / `found_triangle_minima` - detect the CHoCH "triangle": a pullback of at
@@ -160,7 +160,4 @@ Phase G shows both sides of the SMC approach honestly:
 - **Negative:** the strategy is **regime-dependent** (good for one year, unstable across years) and
   ML could **not** predict the Stop Loss.
 
-The instability is exactly what motivated the next and final step. The research log ends by
-converging on a **Trend + Momentum** design - EMA 200 for trend direction, EMA 50 for entries, RSI
-for momentum confirmation and **ATR-based Stop Loss / Take Profit** - which became the foundation of
-the project's final scoring strategy.
+The instability across market regimes is what motivated the project's next and final step.
