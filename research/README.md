@@ -72,4 +72,6 @@ comma separated (`open_time, close_time, open, high, low, close, volume, ...`).
 - **D** — dynamic 6-coefficient model (grid search).
 - **E** — predicting `Ks`/`Kt` from features (correlation, regression, Random Forest, SHAP).
 - **F** — full-feature importance analysis (includes the `AverageOfAverageNumberOfTrades` case).
-- **G** — transition to Order Blocks.
+- **G** — pivot to **Order Blocks / Smart Money Concepts** (a separate price-action engine in
+  [`order_blocks/`](order_blocks/): swing/FVG/CHoCH/BOS detection plus a Decision-Tree order-block
+  classifier). See [`docs/phase_G.md`](docs/phase_G.md).
