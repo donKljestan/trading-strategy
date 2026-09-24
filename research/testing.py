@@ -9,11 +9,11 @@ Strategy summary:
     functions controlled by two coefficients, Ks (stop-loss scaling) and Kt
     (take-profit scaling). See get_stop_loss_function / get_take_profit_function.
 
-main() sweeps the (ATR_LOW, ATR_HIGH) band and the (Ks, Kt) coefficients across rolling
-5-day windows and writes one row per configuration to parameters.csv, together with the
-market conditions measured on that window (average price/ATR/RSI/SMA/volume and the trend
-and frequency of price and volume). That CSV is the dataset later used for the
-correlation / regression / SHAP analyses.
+main() runs the Phase A analysis: for each rolling 10-day window it sweeps the
+(ATR_LOW, ATR_HIGH) band and the (Ks, Kt) coefficients, then records the *best* parameters
+found for that window to best_params_per_interval.csv, next to the market conditions measured
+on it (average price/ATR/RSI/SMA/volume). The question this poses: are the best parameters
+predictable from market conditions, or essentially random across regimes?
 
 Input data: prices.txt, one 15-minute candle per line, comma separated:
     open_time, close_time, open, high, low, close, volume, ...
@@ -375,47 +375,55 @@ def main():
     SMA_BUY_THRESHOLD = 45
     VOLUME_FACTOR = 1.5
 
-    with open("parameters.csv", "w") as file:
-        file.write("AVERAGE_PRICE,PRICE_FREQUENCY,PRICE_TREND,AVERAGE_VOLUME,VOLUME_FREQUENCY,"
-                   "VOLUME_TREND,AVERAGE_ATR,AVERAGE_RSI,AVERAGE_SMA,ATR_LOW,ATR_HIGH,KS,KT,PROFIT\n")
-        num_days = 5
-        days_back = 20
+    with open("best_params_per_interval.csv", "w") as file:
+        file.write("DAYS_BACK,AVG_PRICE,BEST_ATR_LOW,BEST_ATR_HIGH,ATR_SWEEP_PROFIT,"
+                   "BEST_KS,BEST_KT,KS_KT_SWEEP_PROFIT,AVG_ATR,AVG_RSI,AVG_SMA,AVG_VOLUME\n")
+        num_days = 10  # Phase A: 10-day intervals
+        days_back = 10
         while days_back < 400:
             print(days_back)
 
-            # Sweep the (ATR_LOW, ATR_HIGH) volatility band with Ks/Kt fixed.
+            # 1) Best (ATR_LOW, ATR_HIGH) band with Ks/Kt fixed.
             ks, kt = 1, 1.3
+            best_atr_low = best_atr_high = 0.0
+            best_atr_profit = 0.0
             ATR_THRESHOLD = 0.25
             while ATR_THRESHOLD < 0.4:
                 ATR_THRESHOLD1 = 0.3
                 while ATR_THRESHOLD1 < 1:
-                    (cp, avg_price, avg_atr, avg_rsi, avg_sma, avg_volume,
-                     price_trend, volume_trend, price_frequency, volume_frequency) = backtesting(
-                        num_days, 70, days_back, ks, kt)
-                    file.write(f"{int(avg_price)},{price_frequency},{price_trend},{int(avg_volume)},"
-                               f"{volume_frequency},{volume_trend},{avg_atr:.4f},{avg_rsi:.4f},{avg_sma:.4f},"
-                               f"{ATR_THRESHOLD:.2f},{ATR_THRESHOLD1:.2f},{ks:.2f},{kt:.2f},{cp} \n")
+                    cp = backtesting(num_days, 70, days_back, ks, kt)[0]
+                    if cp > best_atr_profit:
+                        best_atr_profit = cp
+                        best_atr_low = ATR_THRESHOLD
+                        best_atr_high = ATR_THRESHOLD1
                     ATR_THRESHOLD1 += 0.1
                     if 0.51 < ATR_THRESHOLD1 < 0.9:
                         ATR_THRESHOLD1 = 0.99
                 ATR_THRESHOLD += 0.05
 
-            # Sweep the (Ks, Kt) coefficients with the ATR band fixed.
+            # 2) Best (Ks, Kt) with the ATR band fixed; also capture window statistics.
             ATR_THRESHOLD = 0.25
             ATR_THRESHOLD1 = 1
+            best_ks = best_kt = 0.0
+            best_ks_kt_profit = 0.0
+            avg_price = avg_atr = avg_rsi = avg_sma = avg_volume = 0
             ks = 0.8
             while ks < 1.65:
                 kt = 0.8
                 while kt < 1.65:
                     (cp, avg_price, avg_atr, avg_rsi, avg_sma, avg_volume,
-                     price_trend, volume_trend, price_frequency, volume_frequency) = backtesting(
-                        num_days, 70, days_back, ks, kt)
-                    file.write(f"{int(avg_price)},{price_frequency},{price_trend},{int(avg_volume)},"
-                               f"{volume_frequency},{volume_trend},{avg_atr:.4f},{avg_rsi:.4f},{avg_sma:.4f},"
-                               f"{ATR_THRESHOLD:.2f},{ATR_THRESHOLD1:.2f},{ks:.2f},{kt:.2f},{cp} \n")
+                     _pt, _vt, _pf, _vf) = backtesting(num_days, 70, days_back, ks, kt)
+                    if cp > best_ks_kt_profit:
+                        best_ks_kt_profit = cp
+                        best_ks = ks
+                        best_kt = kt
                     kt += 0.1
                 ks += 0.1
-            days_back += 5
+
+            file.write(f"{days_back},{int(avg_price)},{best_atr_low:.2f},{best_atr_high:.2f},"
+                       f"{best_atr_profit:.2f},{best_ks:.2f},{best_kt:.2f},{best_ks_kt_profit:.2f},"
+                       f"{avg_atr:.4f},{avg_rsi:.4f},{avg_sma:.4f},{int(avg_volume)}\n")
+            days_back += 10
 
 
 if __name__ == "__main__":
