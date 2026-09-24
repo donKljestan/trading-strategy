@@ -1,4 +1,4 @@
-# Phase D — Dynamic Ks/Kt from market conditions (6-coefficient grid search)
+# Phase D - Dynamic Ks/Kt from market conditions (6-coefficient grid search)
 
 ## Idea
 
@@ -57,7 +57,7 @@ The idea: high, stable activity (liquidity) justifies wider stops and larger tar
 activity calls for conservative, earlier exits.
 
 Testing showed **number of trades worked better than momentum**, so the final model kept ATR,
-number of trades and price frequency — collapsed into the six coefficients `A..F` above.
+number of trades and price frequency - collapsed into the six coefficients `A..F` above.
 
 ## The search
 
@@ -107,7 +107,7 @@ A = 0.03,  B = 0.06,  C = 0.38,  D = 0.00,  E = 0.03,  F = -0.35
 An earlier hand-picked Kt set was `D = -0.28, E = -0.03, F = 0.17`, and its **signs** are the
 instructive part:
 
-- **D < 0 (ATR).** A negative ATR coefficient *lowers* Take Profit when volatility is high — a
+- **D < 0 (ATR).** A negative ATR coefficient *lowers* Take Profit when volatility is high - a
   deliberately **conservative** rule: in turbulent markets bank a smaller, safer profit before the
   price reverses, instead of reaching for a distant target.
 - **E < 0 (number of trades).** Very small negative: when activity is high, trim Take Profit
@@ -115,7 +115,7 @@ instructive part:
 - **F > 0 (price frequency).** Positive: when price oscillates within a stable range, extend Take
   Profit to ride the longer, calmer trend.
 
-Counter-intuitive signs are not necessarily wrong — here a negative D encodes a sensible "take
+Counter-intuitive signs are not necessarily wrong - here a negative D encodes a sensible "take
 profit sooner when it's volatile" rule. (The final grid-searched set used `D = 0.00`, showing how
 much these choices drift between runs.)
 
@@ -127,4 +127,4 @@ fits the quirks of the test window rather than a durable edge. A 6-D grid search
 inspection is powerful but fragile.
 
 This is exactly what pushed the project to stop hand-tuning and instead **measure predictability
-directly** — the correlation, regression, Random Forest and SHAP analyses of Phase E.
+directly** - the correlation, regression, Random Forest and SHAP analyses of Phase E.

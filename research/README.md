@@ -12,10 +12,10 @@ commits (phases A–G); this first commit establishes the baseline backtester.
 
 A position is opened on a closed 15-minute candle when **all** of the following agree:
 
-- **Momentum** — RSI, together with an SMA computed on the RSI series
+- **Momentum** - RSI, together with an SMA computed on the RSI series
   (`SELL` when `RSI < 40`, `RSI < SMA`, `SMA < 55`; `BUY` when `RSI > 60`, `RSI > SMA`, `SMA > 45`).
-- **Volatility band** — ATR (scaled to % of price) inside `[ATR_LOW, ATR_HIGH]`.
-- **Volume confirmation** — the previous candle's volume exceeds `VOLUME_FACTOR × recent average`.
+- **Volatility band** - ATR (scaled to % of price) inside `[ATR_LOW, ATR_HIGH]`.
+- **Volume confirmation** - the previous candle's volume exceeds `VOLUME_FACTOR × recent average`.
 
 Risk is sized dynamically from volatility through two coefficients:
 
@@ -66,12 +66,12 @@ comma separated (`open_time, close_time, open, high, low, close, volume, ...`).
 
 ## Roadmap (phases)
 
-- **A** — 4-parameter tactic (`ATR_LOW`, `ATR_HIGH`, `Ks`, `Kt`); best parameters per interval.
-- **B** — Stop Loss / Take Profit testing per ATR band.
-- **C** — exponential Ks/Kt risk sizing (curve fitting).
-- **D** — dynamic 6-coefficient model (grid search).
-- **E** — predicting `Ks`/`Kt` from features (correlation, regression, Random Forest, SHAP).
-- **F** — full-feature importance analysis (includes the `AverageOfAverageNumberOfTrades` case).
-- **G** — pivot to **Order Blocks / Smart Money Concepts** (a separate price-action engine in
+- **A** - 4-parameter tactic (`ATR_LOW`, `ATR_HIGH`, `Ks`, `Kt`); best parameters per interval.
+- **B** - Stop Loss / Take Profit testing per ATR band.
+- **C** - exponential Ks/Kt risk sizing (curve fitting).
+- **D** - dynamic 6-coefficient model (grid search).
+- **E** - predicting `Ks`/`Kt` from features (correlation, regression, Random Forest, SHAP).
+- **F** - full-feature importance analysis (includes the `AverageOfAverageNumberOfTrades` case).
+- **G** - pivot to **Order Blocks / Smart Money Concepts** (a separate price-action engine in
   [`order_blocks/`](order_blocks/): swing/FVG/CHoCH/BOS detection plus a Decision-Tree order-block
   classifier). See [`docs/phase_G.md`](docs/phase_G.md).

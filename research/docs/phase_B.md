@@ -1,4 +1,4 @@
-# Phase B — Per-ATR-band SL/TP tuning and the overfitting trap
+# Phase B - Per-ATR-band SL/TP tuning and the overfitting trap
 
 ## What was tried
 
@@ -17,7 +17,7 @@ formulation of Phase C):
 ## The surprising result
 
 - When the per-band settings were combined into a single run over the full history, the result
-  was **negative** — the opposite of adding up the per-band profits.
+  was **negative** - the opposite of adding up the per-band profits.
 - The walk-forward backtest, on the other hand, looked *spectacular*: reported window returns of
   `+40%` to `+180%` and a cumulative figure growing into the hundreds of thousands of USDT.
 
@@ -30,12 +30,12 @@ formulation of Phase C):
 
 ## Why this is a warning, not a win
 
-Both observations are textbook signs that the backtest — not the market — is being optimised:
+Both observations are textbook signs that the backtest - not the market - is being optimised:
 
 - **Selection bias / segment optimisation.** Tuning each ATR band on its own picks the settings
   that happened to fit that slice; those settings do not generalise, so the combined run collapses.
 - **Unrealistic execution.** The walk-forward figures assume perfect fills, **no slippage, no
-  funding**, and only the 0.05% fee — with **10× leverage compounding**, small modelling errors
+  funding**, and only the 0.05% fee - with **10× leverage compounding**, small modelling errors
   explode into fantasy returns.
 - **Over-restriction.** Gating on narrow ATR bands throws away most signals and leaves a tiny,
   cherry-picked sample.
@@ -47,8 +47,8 @@ signals, and over-optimisation.
 
 These results were recognised as **overfitting**, not edge. That recognition drove the next steps:
 
-- **Phase C** — replace the brittle fixed Stop Loss / Take Profit with **ATR-based exponential
+- **Phase C** - replace the brittle fixed Stop Loss / Take Profit with **ATR-based exponential
   risk sizing** (coefficients Ks/Kt), so risk adapts to volatility instead of being hand-picked
   per band.
-- **Phases E/F** — stop trusting eye-balled backtests and **quantify** predictability with
+- **Phases E/F** - stop trusting eye-balled backtests and **quantify** predictability with
   correlation, regression, Random Forest and SHAP (which confirm the edge is weak).

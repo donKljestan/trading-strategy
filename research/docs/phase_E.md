@@ -1,10 +1,10 @@
-# Phase E — Can Ks/Kt be predicted from market conditions?
+# Phase E - Can Ks/Kt be predicted from market conditions?
 
 ## The question
 
 Phases A–D kept hoping the risk coefficients Ks/Kt could be set from the market. Phase E stops
 guessing and **measures it directly**: given the market features of a window (ATR, number of
-trades, price frequency, volume, RSI, SMA, momentum), can we predict the profitable Ks/Kt — or the
+trades, price frequency, volume, RSI, SMA, momentum), can we predict the profitable Ks/Kt - or the
 profit itself?
 
 ## Methods and results
@@ -17,14 +17,14 @@ simpler model failed. Full metrics in
 
 | method (increasing non-linearity) | target | MSE | R² |
 | --- | --- | --- | --- |
-| Correlation | Ks vs ATR_HIGH | — | corr = 0.21 |
-| Correlation | Kt vs ATR_LOW | — | corr = 0.10 |
+| Correlation | Ks vs ATR_HIGH | - | corr = 0.21 |
+| Correlation | Kt vs ATR_LOW | - | corr = 0.10 |
 | Linear regression | Ks | 0.059 | 0.051 |
 | Linear regression | Kt | 0.058 | 0.007 |
 | Random Forest (non-linear) | Ks | 0.049 | 0.21 |
-| Random Forest (non-linear) | Kt | — | -0.005 |
-| Neural network (non-linear) | Ks / Kt | — | negative |
-| Genetic-algorithm search | Ks / Kt | — | best Ks≈1.21, Kt≈1.04 (profit still negative) |
+| Random Forest (non-linear) | Kt | - | -0.005 |
+| Neural network (non-linear) | Ks / Kt | - | negative |
+| Genetic-algorithm search | Ks / Kt | - | best Ks≈1.21, Kt≈1.04 (profit still negative) |
 
 **Non-linear analysis of the tuning parameters' effect on profit** (ATR_LOW, ATR_HIGH, StopLoss,
 TakeProfit → profit)
@@ -34,8 +34,8 @@ TakeProfit → profit)
 | Random Forest (non-linear) | 17.43 | -0.04 |
 | Polynomial regression (degree 2) | 16.69 | 0.0025 |
 
-The escalation is the whole point: moving from linear regression to **non-linear** models — Random
-Forest, a degree-2 polynomial, a neural network, even a genetic-algorithm search — barely moved the
+The escalation is the whole point: moving from linear regression to **non-linear** models - Random
+Forest, a degree-2 polynomial, a neural network, even a genetic-algorithm search - barely moved the
 needle. Random Forest lifted the Ks fit from R²=0.05 only to 0.21; Kt stayed negative; the
 polynomial (R²=0.0025) and the neural net (negative R²) added nothing. **The dependency is absent
 both linearly and non-linearly.** `feature_analysis.py` reproduces the Random Forest + SHAP part.
@@ -43,16 +43,16 @@ both linearly and non-linearly.** `feature_analysis.py` reproduces the Random Fo
 ## Optimising Ks/Kt directly with a genetic algorithm
 
 Fitting models only *describes* the relationship; a **genetic algorithm** was also run to actively
-*evolve* good Ks/Kt values — initialise a population of (Ks, Kt) pairs, score each by average
+*evolve* good Ks/Kt values - initialise a population of (Ks, Kt) pairs, score each by average
 profit, keep the fittest, then apply cross-over and mutation across successive generations. It
 converged on **Ks ≈ 1.21, Kt ≈ 1.04**, but the profit at that exact point was **negative** (a −100
 penalty was applied because the dataset held no samples for that combination). Even an evolutionary
-optimiser could not evolve a robustly profitable setting — independent confirmation that the edge
+optimiser could not evolve a robustly profitable setting - independent confirmation that the edge
 does not live in these parameters.
 
 ## Which measured features drive profit (Random Forest importance)
 
-Turned around — which market conditions most influence *profit* — a Random Forest on the interval
+Turned around - which market conditions most influence *profit* - a Random Forest on the interval
 dataset gave the split below, with an overall **R² = 0.237** (about 24% of profit variance
 explained). Full data in
 [`../results/profit_feature_importance_intervals.csv`](../results/profit_feature_importance_intervals.csv):
@@ -66,13 +66,13 @@ explained). Full data in
 | Average of Average Number of Trades | 9.56 |
 
 A separate check on trading activity: the raw number of trades contributed ~11% while its rolling
-average contributed ~27% — activity matters somewhat, but no single feature dominates and the
+average contributed ~27% - activity matters somewhat, but no single feature dominates and the
 overall explanatory power stays low (R² = 0.237).
 
 ## Correlation of profit with market conditions
 
-On the 6,786-row `parametersWith0.csv` dataset — where profit ranges from **−14.29 to +20.88** with
-a mean of **−0.45** (the strategy tends *slightly negative* overall) — the calculated parameters
+On the 6,786-row `parametersWith0.csv` dataset - where profit ranges from **−14.29 to +20.88** with
+a mean of **−0.45** (the strategy tends *slightly negative* overall) - the calculated parameters
 `ATR_LOW`, `ATR_HIGH`, `Ks`, `Kt` all correlate near **zero** with every measured feature. Profit
 itself correlates most with:
 
@@ -83,14 +83,14 @@ itself correlates most with:
 | Volume Trend | −0.21 |
 
 Even the strongest (Price Frequency, +0.48) is only moderate. Scatter plots of
-`ATR_LOW / ATR_HIGH / Ks / Kt` against the measured parameters show **no pattern** — the calculated
+`ATR_LOW / ATR_HIGH / Ks / Kt` against the measured parameters show **no pattern** - the calculated
 parameters look randomly distributed rather than driven by any single measurement:
 
 ![Scatter of calculated vs measured parameters](../figures/scatter_calc_vs_measured_params.png)
 
 ## Visual evidence
 
-- Profit is spread across the whole Ks/Kt plane rather than concentrated — no strong dependency:
+- Profit is spread across the whole Ks/Kt plane rather than concentrated - no strong dependency:
 
   ![Profit vs Ks/Kt](../figures/profit_dependency_ks_kt.jpg)
 
@@ -99,16 +99,16 @@ parameters look randomly distributed rather than driven by any single measuremen
   ![Ks vs ATR_HIGH and Kt vs ATR_LOW](../figures/KSvsATR_high_and_KVvsATR_low.jpg)
 
 - SHAP ranks PriceFrequency, AverageATR and VolumeTrend as the most influential features for
-  profit — but their overall contribution is still small:
+  profit - but their overall contribution is still small:
 
   ![SHAP summary](../figures/SHAP_analysis.jpeg)
 
 ## The trap that made it look solved (data leakage)
 
 At one point a Random Forest predicting profit reported **R² = 0.91** (MSE 28.74), and held at
-**R² = 0.91** (MSE 26.51) even on a much larger dataset — apparently excellent, and consistently
+**R² = 0.91** (MSE 26.51) even on a much larger dataset - apparently excellent, and consistently
 so. But that model **included Ks and Kt among its inputs**, and profit in the dataset was *computed
-from* Ks and Kt. The model was simply reading back its own answer — textbook **data leakage**.
+from* Ks and Kt. The model was simply reading back its own answer - textbook **data leakage**.
 Removing Ks/Kt and predicting profit from genuine market features drops R² to **0.237**.
 
 This is the key lesson of the whole pre-order-blocks era: a headline metric (0.91) can be an
@@ -120,6 +120,6 @@ Across correlation, linear and polynomial regression, Random Forest, SHAP and a 
 the profitable parameters are **not reliably predictable** from market conditions, and profit
 itself is only weakly explained. The parameter-driven approach had hit a ceiling.
 
-That negative result — not a failure but a finding — is what motivated the change of direction in
+That negative result - not a failure but a finding - is what motivated the change of direction in
 the next phase: from predicting parameters to reading **price action / market structure** (Order
 Blocks).

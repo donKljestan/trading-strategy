@@ -1,12 +1,12 @@
-# Phase A — Best parameters per 10-day interval
+# Phase A - Best parameters per 10-day interval
 
 ## Goal
 
 The first version of the strategy exposed four tunable parameters:
 
-- **ATR_LOW**, **ATR_HIGH** — the volatility band the strategy is allowed to trade in.
-- **Ks** — how far the Stop Loss sits from entry (scaled by ATR).
-- **Kt** — how far the Take Profit sits, relative to the Stop Loss.
+- **ATR_LOW**, **ATR_HIGH** - the volatility band the strategy is allowed to trade in.
+- **Ks** - how far the Stop Loss sits from entry (scaled by ATR).
+- **Kt** - how far the Take Profit sits, relative to the Stop Loss.
 
 BTC 15-minute history was split into **rolling 10-day windows**. For each window the market was
 summarised (average price, ATR, RSI, SMA, volume) and a brute-force sweep found the parameter
@@ -26,7 +26,7 @@ parameter-driven approach is fragile.
 
 1. sweeps the `(ATR_LOW, ATR_HIGH)` band with `Ks/Kt` fixed and keeps the best band;
 2. sweeps `(Ks, Kt)` with the band fixed and keeps the best pair;
-3. writes one row — the window's market conditions plus its best parameters — to
+3. writes one row - the window's market conditions plus its best parameters - to
    [`../results/best_params_per_interval.csv`](../results/best_params_per_interval.csv).
 
 ## Result
@@ -47,7 +47,7 @@ parameter-driven approach is fragile.
 | 110 | 67 075 | 0.40–0.99 → 4.78 | 0.80, 1.00 → 3.34 | 0.340 | 50.7 | 283 |
 | 115 | 65 688 | none → 0.00 | 1.30, 0.80 → 0.93 | 0.333 | 49.9 | 273 |
 
-*(Excerpt — the full set of 24 intervals is in
+*(Excerpt - the full set of 24 intervals is in
 [`../results/best_params_per_interval.csv`](../results/best_params_per_interval.csv).)*
 
 ## Reading of the result
@@ -56,7 +56,7 @@ parameter-driven approach is fragile.
   likewise, with no visible monotonic link to `avg_atr` or any other measured condition
   (e.g. `avg_atr = 0.662` → `Ks = 1.1`, but `avg_atr = 0.399` → `Ks = 1.6`).
 - **Profit is very uneven** across windows (from ~0.5 to ~27), and at least one window (115) has
-  **no profitable ATR band at all** — the strategy simply does not work there.
+  **no profitable ATR band at all** - the strategy simply does not work there.
 - Visually this already looks closer to a **random scatter** than to a stable dependency.
 
 ## Conclusion → what comes next
@@ -64,7 +64,7 @@ parameter-driven approach is fragile.
 Phase A does not settle the question; it only shows that *if* a dependency exists, it is weak and
 not obvious by eye. That motivates the rigorous statistical work in the later phases:
 
-- **C** — replace the fragile fixed thresholds with exponential Ks/Kt risk sizing.
-- **D** — a dynamic 6-coefficient model tuned by grid search.
-- **E/F** — correlation, regression, Random Forest and SHAP to *quantify* whether the parameters
+- **C** - replace the fragile fixed thresholds with exponential Ks/Kt risk sizing.
+- **D** - a dynamic 6-coefficient model tuned by grid search.
+- **E/F** - correlation, regression, Random Forest and SHAP to *quantify* whether the parameters
   are predictable at all (they turn out not to be).

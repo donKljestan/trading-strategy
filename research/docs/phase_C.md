@@ -1,4 +1,4 @@
-# Phase C — Exponential risk sizing from ATR (curve fitting)
+# Phase C - Exponential risk sizing from ATR (curve fitting)
 
 ## Motivation
 
@@ -10,7 +10,7 @@ knock the position out.
 ## Choosing the shape
 
 A few anchor points were picked by hand to describe the desired Stop Loss curve as a function of
-ATR — roughly:
+ATR - roughly:
 
 | ATR | target Stop Loss |
 | --- | --- |
@@ -24,7 +24,7 @@ a single coefficient. An **exponential** is the natural family for that.
 
 ## Why an exponential (the derivation)
 
-The requirement started very concretely — a coefficient was needed so that, for a reference move of
+The requirement started very concretely - a coefficient was needed so that, for a reference move of
 ~620, `0.25` maps to about `500` and `0.5` to about `1500`. Generalising that into a smooth,
 tunable curve gives:
 
@@ -33,7 +33,7 @@ f(x) = A · (e^(k·x) − 1)
 ```
 
 with anchor behaviour `f(0.25) ≈ 300–500`, `f(0.5) ≈ 1500`, `f(0.8) ≈ 1600–1800`. The parameter
-`k` controls how quickly the curve rises — a larger `k` packs more growth into the low-`x` region —
+`k` controls how quickly the curve rises - a larger `k` packs more growth into the low-`x` region -
 which is exactly the adjustable steepness the Stop Loss needed.
 
 This is also why **ATR** is the natural input: a higher ATR means faster, larger price swings (a
@@ -55,7 +55,7 @@ def model(x, a, b, c):
 The exponential clearly tracks the anchor points better than a straight line, confirming the
 exponential form.
 
-## Result — the risk functions used by the strategy
+## Result - the risk functions used by the strategy
 
 The fitted shape becomes the risk-sizing functions in [`../testing.py`](../testing.py), with the
 tuning coefficients **Ks** and **Kt** exposed:
@@ -86,13 +86,13 @@ StopLoss% = a·e^(b·Ks) + c·e^(b·ATR) = −0.0280·e^(2.0145·Ks) + 0.411·e^
 A separate attempt (`Function.csv`) tried to approximate the recorded results directly with a
 regression model, comparing three families:
 
-- **Linear** — `Result = -0.029·Arg1 + 976.94·Arg2 + 1785.22·Arg3 - 948.37`, MSE ≈ **674.63**.
-- **Exponential** — `Result ≈ a·e^(b·Arg1 + c·Arg2 + d·Arg3)` — numerically **overflowed** (the
+- **Linear** - `Result = -0.029·Arg1 + 976.94·Arg2 + 1785.22·Arg3 - 948.37`, MSE ≈ **674.63**.
+- **Exponential** - `Result ≈ a·e^(b·Arg1 + c·Arg2 + d·Arg3)` - numerically **overflowed** (the
   exponent exceeded the float range), so it was refit in log space.
-- **Log-transformed** — `Result ≈ exp(4.081 − 0.000048·Arg1 + 1.733·Arg2 + 2.133·Arg3)`,
-  MSE ≈ **1989.46** — worse than the plain linear fit.
+- **Log-transformed** - `Result ≈ exp(4.081 − 0.000048·Arg1 + 1.733·Arg2 + 2.133·Arg3)`,
+  MSE ≈ **1989.46** - worse than the plain linear fit.
 
-The linear model won; the exponential added only numerical instability — a reminder that a fancier
+The linear model won; the exponential added only numerical instability - a reminder that a fancier
 functional form is not automatically a better one.
 
 ## Why this matters

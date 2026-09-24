@@ -1,8 +1,8 @@
-# Phase F — What drives price, and the level-vs-return trap
+# Phase F - What drives price, and the level-vs-return trap
 
 ## Setup
 
-In the "breaking 2020" study the dataset was widened to **18 columns** — every indicator and its
+In the "breaking 2020" study the dataset was widened to **18 columns** - every indicator and its
 rolling averages, including a doubly-smoothed one, `AverageOfAverageNumberOfTrades`
 (the average of the average number of trades). A Random Forest was asked which features drive price,
 for **two different targets**:
@@ -17,10 +17,10 @@ for **two different targets**:
 
 Both targets come straight from the candle's own columns in `values.csv`:
 
-- **Open price level** = the `OpenPrice` column — the raw price at the start of the candle.
+- **Open price level** = the `OpenPrice` column - the raw price at the start of the candle.
 - **Price change (return)** = `ClosePrice − OpenPrice`, computed per candle in
   `price_drivers_analysis.py` as `data["ClosePrice"] - data["OpenPrice"]`. This is the actual
-  directional move of the candle — the quantity a trade would try to capture — so it is the only
+  directional move of the candle - the quantity a trade would try to capture - so it is the only
   target that is meaningful for a strategy.
 
 A **Random Forest** (100 trees, a non-linear model) is fitted separately for each target, and the
@@ -46,10 +46,10 @@ feature importances are normalised to percentages.
 | NumOfTrades | 0.00 | 8.05 |
 | TakerBuyBaseAssetVolume | 0.00 | 6.70 |
 
-*(All 15 features, nothing omitted — same numbers as
+*(All 15 features, nothing omitted - same numbers as
 [`../results/feature_importance_price_drivers.csv`](../results/feature_importance_price_drivers.csv).)*
 
-- Predicting the **level**, one feature — `AverageOfAverageNumberOfTrades` — dominates at **83%**.
+- Predicting the **level**, one feature - `AverageOfAverageNumberOfTrades` - dominates at **83%**.
 - Predicting the **change**, that same feature drops to **6.4%** and *no* feature dominates; the
   importance is spread fairly evenly (RSI 9.6%, QuoteAssetVolume 8.9%, NumOfTrades 8.0%, …).
 
@@ -60,8 +60,8 @@ both it and the BTC price level trended upward together, so a tree can "predict"
 almost perfectly just by reading this slow trend. That is **autocorrelation of a non-stationary
 series**, not a tradeable signal.
 
-The moment the target becomes the **return** (close − open) — the thing that actually matters for
-trading — the illusion vanishes: importance collapses to ~6% and nothing predicts.
+The moment the target becomes the **return** (close − open) - the thing that actually matters for
+trading - the illusion vanishes: importance collapses to ~6% and nothing predicts.
 
 ![Price vs. average-of-average number of trades](../figures/price_vs_avg_of_avg_num_trades.png)
 
