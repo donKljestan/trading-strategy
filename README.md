@@ -77,6 +77,11 @@ risk controls (max open positions, daily-loss limit, emergency stop). It is inte
 only**: it does not authenticate with Binance or submit exchange orders, and it is not presented as
 low-latency production infrastructure.
 
+**Previous live-execution experience:** An earlier private prototype used Binance authenticated APIs
+for limited live order placement with a small account. That experimental execution code is not
+included here. This repository intentionally retains the safer paper-trading implementation and
+public market-data pipeline.
+
 ## Tech stack
 
 Python · pandas · pandas-ta · scikit-learn · SHAP · scipy · matplotlib · requests · websockets
