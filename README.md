@@ -63,30 +63,31 @@ backtesting/       Production pipeline
   download_*.py    Binance data ingestion (daily / hourly / 15-min)
   ADX/ATR/RSIandSMA/volume.py   Technical indicators
   calculateProfit.py            Final scoring strategy (backtest)
-LiveTesting.py     Live / paper trading bot (Binance WebSocket) running the scoring strategy
+LiveTesting.py     Real-time paper-trading and market-data recovery prototype
 requirements.txt   Python dependencies
-.env.example       Template for API keys and runtime settings
+.env.example       Template for paper-trading runtime settings
 ```
 
-## From backtest to live
+## From backtest to real-time simulation
 
-[`LiveTesting.py`](LiveTesting.py) deploys the same scoring strategy in real time: it streams 15-min
-candles over the Binance WebSocket, recomputes the multi-timeframe indicators on the fly, and manages
-positions with risk controls (max open positions, daily-loss limit, emergency stop) plus
-disconnect/reconnect recovery. It supports a **paper-trading mode** (`PAPER_TRADING=True`) so it can
-run without real money.
+[`LiveTesting.py`](LiveTesting.py) runs the same scoring strategy against public Binance market data.
+It processes only closed 15-minute candles, rejects duplicate/out-of-order messages, detects sequence
+gaps, reconciles open paper positions after reconnects, persists simulated position state, and applies
+risk controls (max open positions, daily-loss limit, emergency stop). It is intentionally **paper
+only**: it does not authenticate with Binance or submit exchange orders, and it is not presented as
+low-latency production infrastructure.
 
 ## Tech stack
 
-Python · pandas · pandas-ta · scikit-learn · SHAP · scipy · matplotlib · python-binance · websockets
+Python · pandas · pandas-ta · scikit-learn · SHAP · scipy · matplotlib · requests · websockets
 
 ## Running it
 
 ```bash
 pip install -r requirements.txt
 
-# API keys / settings (never commit real keys)
-copy .env.example .env   # then edit .env
+# Optional paper-trading settings
+copy .env.example .env
 
 # Fetch historical data (writes to backtesting/prices/)
 python backtesting/main.py
@@ -94,7 +95,7 @@ python backtesting/main.py
 # Backtest the final strategy
 python backtesting/calculateProfit.py
 
-# Paper-trade live (PAPER_TRADING defaults to True)
+# Start the real-time paper-trading simulator
 python LiveTesting.py
 ```
 

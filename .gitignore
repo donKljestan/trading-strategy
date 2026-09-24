@@ -13,6 +13,9 @@ info.log
 # Data files
 activeOrders.csv
 completedOrders.csv
+performance_log.csv
+emergency_stop.txt
+backtesting/prices/
 
 # Python
 __pycache__/
