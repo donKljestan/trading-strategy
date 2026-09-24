@@ -81,6 +81,20 @@ ATR (fitted coefficients `a = −0.0280`, `b = 2.0145`, `c = 0.411`):
 StopLoss% = a·e^(b·Ks) + c·e^(b·ATR) = −0.0280·e^(2.0145·Ks) + 0.411·e^(2.0145·ATR)
 ```
 
+## Side experiment: approximating the parameter table with regression
+
+A separate attempt (`Function.csv`) tried to approximate the recorded results directly with a
+regression model, comparing three families:
+
+- **Linear** — `Result = -0.029·Arg1 + 976.94·Arg2 + 1785.22·Arg3 - 948.37`, MSE ≈ **674.63**.
+- **Exponential** — `Result ≈ a·e^(b·Arg1 + c·Arg2 + d·Arg3)` — numerically **overflowed** (the
+  exponent exceeded the float range), so it was refit in log space.
+- **Log-transformed** — `Result ≈ exp(4.081 − 0.000048·Arg1 + 1.733·Arg2 + 2.133·Arg3)`,
+  MSE ≈ **1989.46** — worse than the plain linear fit.
+
+The linear model won; the exponential added only numerical instability — a reminder that a fancier
+functional form is not automatically a better one.
+
 ## Why this matters
 
 Risk is now sized by a principled, continuous rule rather than brittle constants. With that in

@@ -40,6 +40,16 @@ needle. Random Forest lifted the Ks fit from R²=0.05 only to 0.21; Kt stayed ne
 polynomial (R²=0.0025) and the neural net (negative R²) added nothing. **The dependency is absent
 both linearly and non-linearly.** `feature_analysis.py` reproduces the Random Forest + SHAP part.
 
+## Optimising Ks/Kt directly with a genetic algorithm
+
+Fitting models only *describes* the relationship; a **genetic algorithm** was also run to actively
+*evolve* good Ks/Kt values — initialise a population of (Ks, Kt) pairs, score each by average
+profit, keep the fittest, then apply cross-over and mutation across successive generations. It
+converged on **Ks ≈ 1.21, Kt ≈ 1.04**, but the profit at that exact point was **negative** (a −100
+penalty was applied because the dataset held no samples for that combination). Even an evolutionary
+optimiser could not evolve a robustly profitable setting — independent confirmation that the edge
+does not live in these parameters.
+
 ## Which measured features drive profit (Random Forest importance)
 
 Turned around — which market conditions most influence *profit* — a Random Forest on the interval
@@ -58,6 +68,25 @@ explained). Full data in
 A separate check on trading activity: the raw number of trades contributed ~11% while its rolling
 average contributed ~27% — activity matters somewhat, but no single feature dominates and the
 overall explanatory power stays low (R² = 0.237).
+
+## Correlation of profit with market conditions
+
+On the 6,786-row `parametersWith0.csv` dataset — where profit ranges from **−14.29 to +20.88** with
+a mean of **−0.45** (the strategy tends *slightly negative* overall) — the calculated parameters
+`ATR_LOW`, `ATR_HIGH`, `Ks`, `Kt` all correlate near **zero** with every measured feature. Profit
+itself correlates most with:
+
+| feature | correlation with profit |
+| --- | --- |
+| Price Frequency | +0.48 |
+| Average Volume | +0.15 |
+| Volume Trend | −0.21 |
+
+Even the strongest (Price Frequency, +0.48) is only moderate. Scatter plots of
+`ATR_LOW / ATR_HIGH / Ks / Kt` against the measured parameters show **no pattern** — the calculated
+parameters look randomly distributed rather than driven by any single measurement:
+
+![Scatter of calculated vs measured parameters](../figures/scatter_calc_vs_measured_params.png)
 
 ## Visual evidence
 

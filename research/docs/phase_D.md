@@ -40,6 +40,22 @@ with an extra SMA-based nudge depending on whether price is above or below its S
 Ks += ε·sign(SMA − price),   Kt -= ζ·sign(SMA − price)                    (ε, ζ ≈ 0.05)
 ```
 
+The **average number of trades** was treated as a liquidity / stability proxy and adjusted in both
+directions:
+
+```
+# high activity  -> more room: wider Ks, higher Kt
+Ks = Ks0 + α·(AvgNumTrades − AvgNumTrades̄)/AvgNumTrades̄        (α ≈ 0.1)
+Kt = Kt0 + β·(AvgNumTrades − AvgNumTrades̄)/AvgNumTrades̄        (β ≈ 0.2)
+
+# low activity   -> tighter, quicker exits: smaller Ks, lower Kt
+Ks = Ks0 − γ·(AvgNumTrades̄ − AvgNumTrades)/AvgNumTrades̄        (γ ≈ 0.1)
+Kt = Kt0 − δ·(AvgNumTrades̄ − AvgNumTrades)/AvgNumTrades̄        (δ ≈ 0.15)
+```
+
+The idea: high, stable activity (liquidity) justifies wider stops and larger targets, while thin
+activity calls for conservative, earlier exits.
+
 Testing showed **number of trades worked better than momentum**, so the final model kept ATR,
 number of trades and price frequency — collapsed into the six coefficients `A..F` above.
 
@@ -85,6 +101,23 @@ A = 0.03,  B = 0.06,  C = 0.38,  D = 0.00,  E = 0.03,  F = -0.35
 - But it **broke down during the 2020 resistance breakout** (a regime unlike the training period).
 - And it was **extremely sensitive**: changing any coefficient by even 0.01–0.02 measurably reduced
   profit.
+
+## Interpreting the Kt coefficients (why D can be negative)
+
+An earlier hand-picked Kt set was `D = -0.28, E = -0.03, F = 0.17`, and its **signs** are the
+instructive part:
+
+- **D < 0 (ATR).** A negative ATR coefficient *lowers* Take Profit when volatility is high — a
+  deliberately **conservative** rule: in turbulent markets bank a smaller, safer profit before the
+  price reverses, instead of reaching for a distant target.
+- **E < 0 (number of trades).** Very small negative: when activity is high, trim Take Profit
+  slightly to realise gains earlier while the crowd is active.
+- **F > 0 (price frequency).** Positive: when price oscillates within a stable range, extend Take
+  Profit to ride the longer, calmer trend.
+
+Counter-intuitive signs are not necessarily wrong — here a negative D encodes a sensible "take
+profit sooner when it's volatile" rule. (The final grid-searched set used `D = 0.00`, showing how
+much these choices drift between runs.)
 
 ## Reading of the result
 
