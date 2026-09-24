@@ -1,11 +1,14 @@
-METHOD,TARGET,METRIC,VALUE,NOTE
-Correlation,Ks vs ATR_HIGH,correlation,0.21,weak
-Correlation,Kt vs ATR_LOW,correlation,0.10,weak
-Linear regression,Ks,R2,0.051,~5% of variance
-Linear regression,Kt,R2,0.007,negligible
-Polynomial (deg 2),SL/TP params -> profit,R2,0.0025,negligible
-Random Forest,Ks,R2,0.21,weak
-Random Forest,Kt,R2,-0.005,none
-Random Forest,profit (market features),R2,0.237,~24% of variance
-Random Forest,profit (Ks/Kt included as inputs),R2,0.91,DATA LEAKAGE (profit is computed from Ks/Kt)
-Neural network,Ks/Kt,R2,negative,failed
+METHOD,TARGET,MSE,R2,NOTE
+Correlation,Ks vs ATR_HIGH,,0.21,correlation coefficient (weak)
+Correlation,Kt vs ATR_LOW,,0.10,correlation coefficient (weak)
+Linear regression,Ks,0.059,0.051,~5% of variance
+Linear regression,Kt,0.058,0.007,negligible
+Random Forest (non-linear),Ks,0.049,0.21,better than linear but still weak
+Random Forest (non-linear),Kt,,-0.005,none
+Neural network (non-linear),Ks/Kt,,,negative R2 (failed)
+Genetic algorithm (search),Ks/Kt,,,best Ks~1.21 Kt~1.04 but profit negative
+Random Forest (non-linear),SL/TP params -> profit,17.43,-0.04,no non-linear signal
+Polynomial regression (deg 2),SL/TP params -> profit,16.69,0.0025,negligible
+Random Forest,profit (market features),,0.237,~24% of variance
+Random Forest,profit (Ks/Kt as inputs),28.74,0.91,DATA LEAKAGE (profit computed from Ks/Kt)
+Random Forest,profit (Ks/Kt as inputs; larger set),26.51,0.91,DATA LEAKAGE (consistent artefact)

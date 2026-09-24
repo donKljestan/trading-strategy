@@ -22,6 +22,24 @@ ATR — roughly:
 The curve had to grow quickly at first and then flatten, and its steepness had to be adjustable by
 a single coefficient. An **exponential** is the natural family for that.
 
+## Why an exponential (the derivation)
+
+The requirement started very concretely — a coefficient was needed so that, for a reference move of
+~620, `0.25` maps to about `500` and `0.5` to about `1500`. Generalising that into a smooth,
+tunable curve gives:
+
+```
+f(x) = A · (e^(k·x) − 1)
+```
+
+with anchor behaviour `f(0.25) ≈ 300–500`, `f(0.5) ≈ 1500`, `f(0.8) ≈ 1600–1800`. The parameter
+`k` controls how quickly the curve rises — a larger `k` packs more growth into the low-`x` region —
+which is exactly the adjustable steepness the Stop Loss needed.
+
+This is also why **ATR** is the natural input: a higher ATR means faster, larger price swings (a
+kind of volatility "frequency"), so an exponential in ATR widens the stop precisely when the swings
+get bigger.
+
 ## The fit
 
 [`../curve_fitting.py`](../curve_fitting.py) fits `a·e^(b·x) + c` to those points with
@@ -55,6 +73,13 @@ So:
 - **Stop Loss** grows exponentially with ATR, scaled by **Ks**.
 - **Take Profit** is a multiple of the Stop Loss, scaled by **Kt** (the `0.8459` coefficient also
   comes from a fit).
+
+Phase D later refines the Stop Loss into a **two-term** exponential that depends on *both* Ks and
+ATR (fitted coefficients `a = −0.0280`, `b = 2.0145`, `c = 0.411`):
+
+```
+StopLoss% = a·e^(b·Ks) + c·e^(b·ATR) = −0.0280·e^(2.0145·Ks) + 0.411·e^(2.0145·ATR)
+```
 
 ## Why this matters
 

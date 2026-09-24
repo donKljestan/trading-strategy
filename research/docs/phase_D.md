@@ -24,6 +24,25 @@ that depends on **both** Ks and ATR:
 StopLoss% = -0.0280·e^(2.0145·Ks) + 0.411·e^(2.0145·ATR)
 ```
 
+## How the coefficients were reasoned
+
+Before the compact `A..F` form, the adjustments were worked out one driver at a time, each as a
+normalised deviation from its recent average:
+
+```
+Ks = Ks0 + α·(ATR − ATR̄)/ATR̄ + β·(Momentum − Momentum̄)/Momentum̄        (α≈0.2, β≈0.1)
+Kt = Kt0 + γ·(numTrades − numTrades̄)/numTrades̄                          (γ≈0.15)
+```
+
+with an extra SMA-based nudge depending on whether price is above or below its SMA:
+
+```
+Ks += ε·sign(SMA − price),   Kt -= ζ·sign(SMA − price)                    (ε, ζ ≈ 0.05)
+```
+
+Testing showed **number of trades worked better than momentum**, so the final model kept ATR,
+number of trades and price frequency — collapsed into the six coefficients `A..F` above.
+
 ## The search
 
 `main()` grid-searches `A..F`. Because six dimensions explode combinatorially, the search was run
@@ -41,6 +60,17 @@ sat at the **extreme edge** of the grid:
 
 A "best" result pinned to the corners of the parameter box is a warning, not a discovery -- it is
 almost always fitting noise.
+
+Looking instead at the **bands that contain the top profits** (rather than a single winner) is more
+honest. From the refined sweep:
+
+| percentile | A | B | C | D | E | F | profit |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| top 5% | (-0.05, 0.25) | (-1.0, 0.98) | (0.1, 0.15) | (-0.5, 0.3) | (-0.5, 0.3) | 0.15 | 24.0-34.9 |
+| top 1% | (0.2, 0.25) | (-1.0, 0.98) | (0.1, 0.15) | -0.3 | (-0.5, 0.3) | 0.15 | 32.7-34.9 |
+
+Correlation with profit was strongest (and **negative**) for **B**, and mildly **positive** for
+**F**; the rest were weak -- which is why the search was later refined mainly along B and F.
 
 ## Best coefficients chosen
 

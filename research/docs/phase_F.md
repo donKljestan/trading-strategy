@@ -13,6 +13,19 @@ for **two different targets**:
 `price_drivers_analysis.py` reproduces both; the importances are in
 [`../results/feature_importance_price_drivers.csv`](../results/feature_importance_price_drivers.csv).
 
+## How the two targets are built
+
+Both targets come straight from the candle's own columns in `values.csv`:
+
+- **Open price level** = the `OpenPrice` column — the raw price at the start of the candle.
+- **Price change (return)** = `ClosePrice − OpenPrice`, computed per candle in
+  `price_drivers_analysis.py` as `data["ClosePrice"] - data["OpenPrice"]`. This is the actual
+  directional move of the candle — the quantity a trade would try to capture — so it is the only
+  target that is meaningful for a strategy.
+
+A **Random Forest** (100 trees, a non-linear model) is fitted separately for each target, and the
+feature importances are normalised to percentages.
+
 ## Result
 
 | feature | importance on **open price** (%) | importance on **price change** (%) |
@@ -21,10 +34,20 @@ for **two different targets**:
 | AverageATR | 7.06 | 3.87 |
 | AverageQuoteAssetVolume | 5.87 | 8.31 |
 | AverageTakerBuyBaseAssetVolume | 3.29 | 5.02 |
+| AverageVolume | 0.19 | 6.08 |
+| AverageNumberOfTrades | 0.17 | 5.98 |
+| AveragePriceFrequency | 0.15 | 6.15 |
+| PriceFrequency | 0.12 | 4.72 |
+| SMA | 0.05 | 7.54 |
+| ATR | 0.05 | 6.80 |
 | RSI | 0.02 | 9.60 |
 | QuoteAssetVolume | 0.01 | 8.87 |
+| Volume | 0.00 | 5.88 |
 | NumOfTrades | 0.00 | 8.05 |
-| … | … | … |
+| TakerBuyBaseAssetVolume | 0.00 | 6.70 |
+
+*(All 15 features, nothing omitted — same numbers as
+[`../results/feature_importance_price_drivers.csv`](../results/feature_importance_price_drivers.csv).)*
 
 - Predicting the **level**, one feature — `AverageOfAverageNumberOfTrades` — dominates at **83%**.
 - Predicting the **change**, that same feature drops to **6.4%** and *no* feature dominates; the
