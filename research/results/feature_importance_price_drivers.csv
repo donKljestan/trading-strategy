@@ -1,0 +1,16 @@
+FEATURE,IMPORTANCE_OPEN_PRICE_PCT,IMPORTANCE_PRICE_CHANGE_PCT
+RSI,0.02,9.60
+SMA,0.05,7.54
+ATR,0.05,6.80
+AverageATR,7.06,3.87
+Volume,0.00,5.88
+AverageVolume,0.19,6.08
+NumOfTrades,0.00,8.05
+AverageNumberOfTrades,0.17,5.98
+AverageOfAverageNumberOfTrades,83.02,6.43
+PriceFrequency,0.12,4.72
+AveragePriceFrequency,0.15,6.15
+QuoteAssetVolume,0.01,8.87
+AverageQuoteAssetVolume,5.87,8.31
+TakerBuyBaseAssetVolume,0.00,6.70
+AverageTakerBuyBaseAssetVolume,3.29,5.02
