@@ -1,6 +1,6 @@
 # Phase H - The final strategy: multi-timeframe confluence scoring
 
-Phases A–F showed that the strategy's risk parameters are **not predictable** from market features,
+Phases A-F showed that the strategy's risk parameters are **not predictable** from market features,
 and Phase G showed that the price-action (Order Blocks) approach was **unstable across market
 regimes**. The project therefore returned to a **rules-based indicator strategy**, but with a design
 lesson learned from all the previous failures: instead of trusting any single predictive signal,
@@ -40,7 +40,7 @@ Daily indicators are merged onto the 15-min frame with `pd.merge_asof` (`add_1da
 and hourly indicators likewise (`add_1hour_to_15min_chart`); the hourly context used at 15-min bar
 `i` is the previous closed hourly candle (`data.iloc[idx - 4]`).
 
-## The scoring system (0–19 points)
+## The scoring system (0-19 points)
 
 | # | Factor | Rule | Points |
 | --- | --- | --- | --- |
@@ -73,7 +73,7 @@ Backtested on BTCUSDT (from the project's own runs):
 | Year | Market | Profit | Trades | Win rate |
 | --- | --- | --- | --- | --- |
 | **2024** | trending ($40k → $100k) | **+43.53** | 255 (135 SL / 120 TP) | **47.1%** |
-| **2025** | ranging ($93k–$110k) | **−16.34** | 182 (106 SL / 76 TP) | 41.8% |
+| **2025** | ranging ($93k-$110k) | **−16.34** | 182 (106 SL / 76 TP) | 41.8% |
 
 Compared with the earlier strict-AND version on 2024 (~+100 profit, ~99 trades, ~38% win rate), the
 scoring system trades **much more often** with a **higher win rate** but a **lower peak profit** - it
@@ -84,7 +84,7 @@ gives up some upside in strong trends in exchange for more consistent, higher-qu
 - **Regime dependence / overfitting.** The strategy is profitable in the trending year (2024) and
   loses in the ranging year (2025). It was tuned on mostly trending history, and 2025 was a
   structurally different (range-bound) market. This is the same overfitting lesson that runs through
-  the whole project (Phases A–G), now measured directly on out-of-period data.
+  the whole project (Phases A-G), now measured directly on out-of-period data.
 - **LONG-only.** Short setups are disabled, so downtrends are missed entirely.
 - **Momentum weakness in ranges.** Momentum entries are repeatedly stopped out during consolidation.
 
@@ -96,6 +96,7 @@ and a strict per-trade risk cap, and forward/paper testing before any live use.
 
 The final strategy is deliberately **simple, transparent and rules-based** - the opposite of the
 "predict the parameter with ML" ambition of the early phases. The journey is the point: parameter
-optimisation (A–D) and predictive modelling (E–F) failed to generalise, price action (G) was
+optimisation (A-D) and predictive modelling (E-F) failed to generalise, price action (G) was
 unstable, and what remained was a disciplined confluence system whose **own honest 2025 loss** shows
 exactly why robustness and out-of-sample validation matter more than in-sample profit.
+

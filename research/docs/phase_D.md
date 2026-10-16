@@ -2,7 +2,7 @@
 
 ## Idea
 
-Phases A–C used **fixed** risk coefficients Ks and Kt. Phase A already suggested the best values
+Phases A-C used **fixed** risk coefficients Ks and Kt. Phase A already suggested the best values
 drift across market regimes, so Phase D makes Ks and Kt **adaptive**: they are recomputed on every
 candle from the current market conditions, through six tunable coefficients `A..F`.
 
@@ -99,7 +99,7 @@ A = 0.03,  B = 0.06,  C = 0.38,  D = 0.00,  E = 0.03,  F = -0.35
 
 - On a **1500-day** test this gave roughly **27% annual ROI**.
 - But it **broke down during the 2020 resistance breakout** (a regime unlike the training period).
-- And it was **extremely sensitive**: changing any coefficient by even 0.01–0.02 measurably reduced
+- And it was **extremely sensitive**: changing any coefficient by even 0.01-0.02 measurably reduced
   profit.
 
 ## Interpreting the Kt coefficients (why D can be negative)
@@ -128,3 +128,4 @@ inspection is powerful but fragile.
 
 This is exactly what pushed the project to stop hand-tuning and instead **measure predictability
 directly** - the correlation, regression, Random Forest and SHAP analyses of Phase E.
+

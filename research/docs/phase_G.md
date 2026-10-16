@@ -1,6 +1,6 @@
 # Phase G - Order Blocks (Smart Money Concepts)
 
-Phases A–F closed the indicator/parameter era with a clear negative result: measured market
+Phases A-F closed the indicator/parameter era with a clear negative result: measured market
 features do **not** predict returns or the optimal risk parameters. That verdict pushed the project
 away from parameter optimisation and toward **market-structure / price-action** methods. Phase G is
 that pivot - a different modelling philosophy based on **Smart Money Concepts (SMC)**.
@@ -143,12 +143,12 @@ recent year it produced roughly **55% stops / 45% targets** - workable - but ear
 very differently. Detecting the structure looked convincing on-chart, yet profit did **not** grow
 consistently as the backtest window lengthened.
 
-![CHoCH order blocks, 2019–2020](../figures/choch_backtest_2019_2020.png)
+![CHoCH order blocks, 2019-2020](../figures/choch_backtest_2019_2020.png)
 
-![CHoCH order blocks, 2021–2022](../figures/choch_backtest_2021_2022.png)
+![CHoCH order blocks, 2021-2022](../figures/choch_backtest_2021_2022.png)
 
-*The same detector across two very different regimes - 2019–2020 (accumulation/early bull) vs.
-2021–2022 (full bull-then-bear cycle). The structure is detected in both, but a fixed 2%/5% rule that
+*The same detector across two very different regimes - 2019-2020 (accumulation/early bull) vs.
+2021-2022 (full bull-then-bear cycle). The structure is detected in both, but a fixed 2%/5% rule that
 works in one regime does not carry over to the other.*
 
 ## Conclusion → the pivot to the final strategy
@@ -161,3 +161,4 @@ Phase G shows both sides of the SMC approach honestly:
   ML could **not** predict the Stop Loss.
 
 The instability across market regimes is what motivated the project's next and final step.
+

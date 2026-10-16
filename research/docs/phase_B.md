@@ -6,11 +6,11 @@ Two things were explored with **fixed** Stop Loss / Take Profit sizing (before t
 formulation of Phase C):
 
 1. **Per-band tuning.** Stop Loss / Take Profit were tuned *separately* inside four ATR bands
-   (`0.25–0.30`, `0.30–0.40`, `0.40–0.50`, `> 0.50`), by only allowing signals whose ATR fell in
+   (`0.25-0.30`, `0.30-0.40`, `0.40-0.50`, `> 0.50`), by only allowing signals whose ATR fell in
    the band. Each band, in isolation, could be made to look profitable.
 
 2. **A continuous walk-forward backtest** of the baseline configuration
-   (`RSI 40/60`, `SMA 55/45`, `ATR ≈ 0.21`) over Feb–May 2024, with **10× leverage on a $500
+   (`RSI 40/60`, `SMA 55/45`, `ATR ≈ 0.21`) over Feb-May 2024, with **10× leverage on a $500
    account**, reporting profit per 7-day window
    ([`../results/fixed_params_backtest_7day.csv`](../results/fixed_params_backtest_7day.csv)).
 
@@ -52,3 +52,4 @@ These results were recognised as **overfitting**, not edge. That recognition dro
   per band.
 - **Phases E/F** - stop trusting eye-balled backtests and **quantify** predictability with
   correlation, regression, Random Forest and SHAP (which confirm the edge is weak).
+

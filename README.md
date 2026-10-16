@@ -34,7 +34,7 @@ methodology.
 ## The final strategy (Phase H)
 
 A **LONG-only, multi-timeframe momentum** strategy that scores six independent technical factors on a
-0–19 scale (daily RSI, price vs daily SMA, hourly EMA/SMA trend, volume confirmation, candle
+0-19 scale (daily RSI, price vs daily SMA, hourly EMA/SMA trend, volume confirmation, candle
 momentum, and Bollinger position) and enters only when the total score is **≥ 14**. Risk is sized
 dynamically: stop loss = `2 × hourly ATR`, take profit = `1.5 × stop loss`.
 
@@ -53,7 +53,7 @@ overfitting and regime dependence rather than cherry-picking a good year.
 ## Repository structure
 
 ```
-research/          Chronological R&D (phases A–H)
+research/          Chronological R&D (phases A-H)
   docs/            Per-phase write-ups (methodology, results, findings)
   order_blocks/    Smart Money Concepts engine + Decision-Tree classifier (Phase G)
   results/         Extracted result tables (CSV)

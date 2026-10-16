@@ -6,7 +6,7 @@ strategy's risk parameters can be **predicted from market conditions**.
 
 The work here is presented chronologically. It ends with an honest negative result that motivated
 the later pivot to price-action (Order Blocks). The reconstruction evolves across a series of
-commits (phases A–G); this first commit establishes the baseline backtester.
+commits (phases A-G); this first commit establishes the baseline backtester.
 
 ## The strategy
 

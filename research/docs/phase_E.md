@@ -2,7 +2,7 @@
 
 ## The question
 
-Phases A–D kept hoping the risk coefficients Ks/Kt could be set from the market. Phase E stops
+Phases A-D kept hoping the risk coefficients Ks/Kt could be set from the market. Phase E stops
 guessing and **measures it directly**: given the market features of a window (ATR, number of
 trades, price frequency, volume, RSI, SMA, momentum), can we predict the profitable Ks/Kt - or the
 profit itself?
@@ -123,3 +123,4 @@ itself is only weakly explained. The parameter-driven approach had hit a ceiling
 That negative result - not a failure but a finding - is what motivated the change of direction in
 the next phase: from predicting parameters to reading **price action / market structure** (Order
 Blocks).
+

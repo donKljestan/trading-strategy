@@ -55,7 +55,7 @@ feature importances are normalised to percentages.
 
 ## Why the 83% is a mirage
 
-`AverageOfAverageNumberOfTrades` is a **doubly-smoothed, slowly-drifting** series. Over 2017–2020
+`AverageOfAverageNumberOfTrades` is a **doubly-smoothed, slowly-drifting** series. Over 2017-2020
 both it and the BTC price level trended upward together, so a tree can "predict" the price level
 almost perfectly just by reading this slow trend. That is **autocorrelation of a non-stationary
 series**, not a tradeable signal.
@@ -80,3 +80,4 @@ Phase F closes the parameter/feature-prediction era with the same verdict as Pha
 features do **not** predict returns. Predictive, indicator-based modelling had reached its limit,
 which is what pushed the project toward **market-structure / price-action** methods (Order Blocks)
 in the next phase.
+

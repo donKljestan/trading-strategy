@@ -32,7 +32,7 @@ tunable curve gives:
 f(x) = A · (e^(k·x) − 1)
 ```
 
-with anchor behaviour `f(0.25) ≈ 300–500`, `f(0.5) ≈ 1500`, `f(0.8) ≈ 1600–1800`. The parameter
+with anchor behaviour `f(0.25) ≈ 300-500`, `f(0.5) ≈ 1500`, `f(0.8) ≈ 1600-1800`. The parameter
 `k` controls how quickly the curve rises - a larger `k` packs more growth into the low-`x` region -
 which is exactly the adjustable steepness the Stop Loss needed.
 
@@ -101,3 +101,4 @@ Risk is now sized by a principled, continuous rule rather than brittle constants
 place, `main()` can sweep `(Ks, Kt)` across rolling windows and record every configuration's
 outcome to `parameters.csv`. That dataset is the input for the next phases, which ask the real
 question: **can the best Ks/Kt be predicted from market conditions at all?**
+
