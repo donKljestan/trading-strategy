@@ -52,4 +52,3 @@ These results were recognised as **overfitting**, not edge. That recognition dro
   per band.
 - **Phases E/F** - stop trusting eye-balled backtests and **quantify** predictability with
   correlation, regression, Random Forest and SHAP (which confirm the edge is weak).
-

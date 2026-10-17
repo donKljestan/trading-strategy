@@ -99,4 +99,3 @@ The final strategy is deliberately **simple, transparent and rules-based** - the
 optimisation (A-D) and predictive modelling (E-F) failed to generalise, price action (G) was
 unstable, and what remained was a disciplined confluence system whose **own honest 2025 loss** shows
 exactly why robustness and out-of-sample validation matter more than in-sample profit.
-

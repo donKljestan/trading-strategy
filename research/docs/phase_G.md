@@ -161,4 +161,3 @@ Phase G shows both sides of the SMC approach honestly:
   ML could **not** predict the Stop Loss.
 
 The instability across market regimes is what motivated the project's next and final step.
-

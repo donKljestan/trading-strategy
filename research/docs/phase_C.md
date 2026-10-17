@@ -101,4 +101,3 @@ Risk is now sized by a principled, continuous rule rather than brittle constants
 place, `main()` can sweep `(Ks, Kt)` across rolling windows and record every configuration's
 outcome to `parameters.csv`. That dataset is the input for the next phases, which ask the real
 question: **can the best Ks/Kt be predicted from market conditions at all?**
-

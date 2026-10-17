@@ -123,4 +123,3 @@ itself is only weakly explained. The parameter-driven approach had hit a ceiling
 That negative result - not a failure but a finding - is what motivated the change of direction in
 the next phase: from predicting parameters to reading **price action / market structure** (Order
 Blocks).
-

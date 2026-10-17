@@ -68,4 +68,3 @@ not obvious by eye. That motivates the rigorous statistical work in the later ph
 - **D** - a dynamic 6-coefficient model tuned by grid search.
 - **E/F** - correlation, regression, Random Forest and SHAP to *quantify* whether the parameters
   are predictable at all (they turn out not to be).
-

@@ -80,4 +80,3 @@ Phase F closes the parameter/feature-prediction era with the same verdict as Pha
 features do **not** predict returns. Predictive, indicator-based modelling had reached its limit,
 which is what pushed the project toward **market-structure / price-action** methods (Order Blocks)
 in the next phase.
-
